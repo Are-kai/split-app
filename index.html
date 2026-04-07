@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>50/50 Splitter</title>
 
+<!-- Icon für iPhone Homescreen -->
+<link rel="apple-touch-icon" href="icon.png">
+
 <style>
     body {
         font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -21,18 +24,19 @@
 
     .container {
         display: flex;
-        gap: 20px;
         justify-content: center;
         max-width: 900px;
         margin: auto;
+        gap: 10px;
     }
 
     .column {
-        flex: 1;
+        width: 50%;
         padding: 20px;
         border-radius: 12px;
         background: white;
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        box-sizing: border-box;
     }
 
     .michelle {
@@ -55,16 +59,16 @@
     }
 
     input {
-        /*width: 100%;*/
         padding: 12px;
         border-radius: 8px;
         border: 1px solid #ccc;
         font-size: 16px;
+        box-sizing: border-box;
     }
 
     button {
         width: 100%;
-        margin: 30px auto 0;
+        margin: 20px auto 0;
         padding: 14px;
         background: #007aff;
         color: white;
@@ -74,6 +78,11 @@
         font-weight: 600;
         max-width: 400px;
         display: block;
+    }
+
+    .add-btn {
+        background: #34c759;
+        margin-top: 10px;
     }
 
     .result {
@@ -94,7 +103,6 @@
         <div class="inputs" id="michelleInputs">
             <input type="text" placeholder="z.B. Edeka 47,50€">
             <input type="text" placeholder="z.B. DM 12.99">
-            <input type="text" placeholder="Weiterer Eintrag...">
         </div>
     </div>
 
@@ -103,11 +111,11 @@
         <div class="inputs" id="chrisInputs">
             <input type="text" placeholder="z.B. Rewe 31,20€">
             <input type="text" placeholder="z.B. Tanken 55.00">
-            <input type="text" placeholder="Weiterer Eintrag...">
         </div>
     </div>
 </div>
 
+<button class="add-btn" onclick="addRow()">+ Neue Zeile hinzufügen</button>
 <button onclick="calculate()">Berechnen</button>
 
 <div class="result" id="result"></div>
@@ -117,10 +125,8 @@
 function extractNumber(text) {
     if (!text) return 0;
 
-    // Komma zu Punkt normalisieren
     text = text.replace(",", ".");
 
-    // Regex: finde etwas wie 47,50 oder 47.50 oder 47
     const match = text.match(/(\d+(\.\d+)?)/);
 
     return match ? parseFloat(match[0]) : 0;
@@ -135,6 +141,22 @@ function sumColumn(id) {
     });
 
     return sum;
+}
+
+function addRow() {
+    const michelle = document.getElementById("michelleInputs");
+    const chris = document.getElementById("chrisInputs");
+
+    const newInputMichelle = document.createElement("input");
+    newInputMichelle.type = "text";
+    newInputMichelle.placeholder = "Weiterer Eintrag...";
+
+    const newInputChris = document.createElement("input");
+    newInputChris.type = "text";
+    newInputChris.placeholder = "Weiterer Eintrag...";
+
+    michelle.appendChild(newInputMichelle);
+    chris.appendChild(newInputChris);
 }
 
 function calculate() {
