@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>50/50 Splitter</title>
+
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: #f5f5f7;
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .container {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .column {
+        flex: 1;
+        padding: 20px;
+        border-radius: 12px;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .michelle {
+        background: #ffe6f2;
+    }
+
+    .chris {
+        background: #e6f0ff;
+    }
+
+    h2 {
+        text-align: center;
+        margin-top: 0;
+    }
+
+    .inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    input {
+        /*width: 100%;*/
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+        margin: 30px auto 0;
+        padding: 14px;
+        background: #007aff;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: 600;
+        max-width: 400px;
+        display: block;
+    }
+
+    .result {
+        margin-top: 25px;
+        font-size: 20px;
+        font-weight: 600;
+        text-align: center;
+    }
+</style>
+</head>
+
+<body>
+<h1>50/50 Splitter</h1>
+
+<div class="container">
+    <div class="column michelle">
+        <h2>Michelle</h2>
+        <div class="inputs" id="michelleInputs">
+            <input type="text" placeholder="z.B. Edeka 47,50€">
+            <input type="text" placeholder="z.B. DM 12.99">
+            <input type="text" placeholder="Weiterer Eintrag...">
+        </div>
+    </div>
+
+    <div class="column chris">
+        <h2>Chris</h2>
+        <div class="inputs" id="chrisInputs">
+            <input type="text" placeholder="z.B. Rewe 31,20€">
+            <input type="text" placeholder="z.B. Tanken 55.00">
+            <input type="text" placeholder="Weiterer Eintrag...">
+        </div>
+    </div>
+</div>
+
+<button onclick="calculate()">Berechnen</button>
+
+<div class="result" id="result"></div>
+
+<script>
+// Extrahiert den ersten gefundenen Zahlenwert aus einem String
+function extractNumber(text) {
+    if (!text) return 0;
+
+    // Komma zu Punkt normalisieren
+    text = text.replace(",", ".");
+
+    // Regex: finde etwas wie 47,50 oder 47.50 oder 47
+    const match = text.match(/(\d+(\.\d+)?)/);
+
+    return match ? parseFloat(match[0]) : 0;
+}
+
+function sumColumn(id) {
+    const inputs = document.querySelectorAll(`#${id} input`);
+    let sum = 0;
+
+    inputs.forEach(input => {
+        sum += extractNumber(input.value);
+    });
+
+    return sum;
+}
+
+function calculate() {
+    const michelle = sumColumn("michelleInputs");
+    const chris = sumColumn("chrisInputs");
+
+    const total = michelle + chris;
+    const fairShare = total / 2;
+
+    let text = "";
+
+    if (michelle > fairShare) {
+        text = `Chris schuldet Michelle ${(michelle - fairShare).toFixed(2)} €`;
+    } else if (chris > fairShare) {
+        text = `Michelle schuldet Chris ${(chris - fairShare).toFixed(2)} €`;
+    } else {
+        text = "Alles ist bereits ausgeglichen";
+    }
+
+    document.getElementById("result").innerText = text;
+}
+</script>
+
+</body>
+</html>
