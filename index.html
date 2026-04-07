@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>50/50 Splitter</title>
 
-<!-- Icon für iPhone Homescreen -->
+<!-- iOS Icon -->
 <link rel="apple-touch-icon" href="icon.png">
 
 <style>
@@ -15,11 +15,14 @@
         padding: 20px;
         background: #f5f5f7;
         color: #333;
+        font-size: 16px;
     }
 
     h1 {
         text-align: center;
         margin-bottom: 30px;
+        font-size: 22px;
+        font-weight: 600;
     }
 
     .container {
@@ -32,24 +35,27 @@
 
     .column {
         width: 50%;
-        padding: 20px;
+        padding: 16px;
         border-radius: 12px;
         background: white;
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         box-sizing: border-box;
+        border: 2px solid rgba(0,0,0,0.15);
     }
 
     .michelle {
-        background: #ffe6f2;
+        background: #ffd0e6;
     }
 
     .chris {
-        background: #e6f0ff;
+        background: #d6e4ff;
     }
 
     h2 {
         text-align: center;
         margin-top: 0;
+        font-size: 18px;
+        font-weight: 600;
     }
 
     .inputs {
@@ -63,26 +69,28 @@
         border-radius: 8px;
         border: 1px solid #ccc;
         font-size: 16px;
+        height: 44px;
         box-sizing: border-box;
     }
 
     button {
         width: 100%;
-        margin: 20px auto 0;
         padding: 14px;
         background: #007aff;
         color: white;
         border: none;
         border-radius: 10px;
-        font-size: 18px;
+        font-size: 17px;
         font-weight: 600;
         max-width: 400px;
         display: block;
+        height: 48px;
+        margin: 14px auto 0;
     }
 
     .add-btn {
         background: #34c759;
-        margin-top: 10px;
+        margin-top: 20px;
     }
 
     .result {
@@ -101,16 +109,18 @@
     <div class="column michelle">
         <h2>Michelle</h2>
         <div class="inputs" id="michelleInputs">
-            <input type="text" placeholder="z.B. Edeka 47,50€">
-            <input type="text" placeholder="z.B. DM 12.99">
+            <input type="text" placeholder="...">
+            <input type="text" placeholder="...">
+            <input type="text" placeholder="...">
         </div>
     </div>
 
     <div class="column chris">
         <h2>Chris</h2>
         <div class="inputs" id="chrisInputs">
-            <input type="text" placeholder="z.B. Rewe 31,20€">
-            <input type="text" placeholder="z.B. Tanken 55.00">
+            <input type="text" placeholder="...">
+            <input type="text" placeholder="...">
+            <input type="text" placeholder="...">
         </div>
     </div>
 </div>
@@ -149,11 +159,11 @@ function addRow() {
 
     const newInputMichelle = document.createElement("input");
     newInputMichelle.type = "text";
-    newInputMichelle.placeholder = "Weiterer Eintrag...";
+    newInputMichelle.placeholder = "...";
 
     const newInputChris = document.createElement("input");
     newInputChris.type = "text";
-    newInputChris.placeholder = "Weiterer Eintrag...";
+    newInputChris.placeholder = "...";
 
     michelle.appendChild(newInputMichelle);
     chris.appendChild(newInputChris);
