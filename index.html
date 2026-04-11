@@ -116,7 +116,6 @@
         padding: 0;
     }
 
-    /* ALLE Icons weiß färben */
     button img {
         width: 28px;
         height: 28px;
@@ -151,7 +150,6 @@
     </div>
 </div>
 
-<!-- Buttonreihe 1 -->
 <div class="button-row">
     <button class="reload-btn" onclick="reloadPage()">
         <img src="reload.png" alt=""> Neu laden
@@ -162,7 +160,6 @@
     </button>
 </div>
 
-<!-- Buttonreihe 2 -->
 <div class="button-row">
     <button class="calc-btn" onclick="calculate()">
         <img src="calculate.png" alt=""> Ergebnis anzeigen
@@ -187,8 +184,24 @@ function extractNumber(text) {
     return match ? parseFloat(match[0]) : 0;
 }
 
-function formatEuro(value) {
-    return value.toFixed(2).replace(".", ",") + " €";
+function formatEuroSmart(text) {
+    if (!text) return text;
+
+    const match = text.match(/(\d+[.,]?\d*)\s*$/);
+    if (!match) return text;
+
+    let number = match[1].replace(",", ".");
+    let value = parseFloat(number);
+    if (isNaN(value)) return text;
+
+    let formatted;
+    if (Number.isInteger(value)) {
+        formatted = value.toString() + " €";
+    } else {
+        formatted = value.toFixed(2).replace(".", ",") + " €";
+    }
+
+    return text.replace(/(\d+[.,]?\d*)\s*$/, formatted);
 }
 
 function sumColumn(id) {
@@ -224,9 +237,9 @@ function calculate() {
     let text = "";
 
     if (michelle > fairShare) {
-        text = `Chris schuldet Michelle ${formatEuro(michelle - fairShare)}`;
+        text = `Chris schuldet Michelle ${formatEuroSmart((michelle - fairShare).toString())}`;
     } else if (chris > fairShare) {
-        text = `Michelle schuldet Chris ${formatEuro(chris - fairShare)}`;
+        text = `Michelle schuldet Chris ${formatEuroSmart((chris - fairShare).toString())}`;
     } else {
         text = "Alles ist bereits ausgeglichen";
     }
@@ -235,7 +248,7 @@ function calculate() {
 }
 
 function shareWhatsApp() {
-    calculate(); // Ergebnis immer aktualisieren
+    calculate();
 
     const michelleInputs = Array.from(document.querySelectorAll("#michelleInputs input"))
         .map(i => i.value.trim())
@@ -252,8 +265,7 @@ function shareWhatsApp() {
     if (michelleInputs.length > 0) {
         message += "Michelle Ausgaben:\n";
         michelleInputs.forEach(v => {
-            const num = extractNumber(v);
-            message += "• " + formatEuro(num) + "\n";
+            message += "• " + formatEuroSmart(v) + "\n";
         });
         message += "\n";
     }
@@ -261,8 +273,7 @@ function shareWhatsApp() {
     if (chrisInputs.length > 0) {
         message += "Chris Ausgaben:\n";
         chrisInputs.forEach(v => {
-            const num = extractNumber(v);
-            message += "• " + formatEuro(num) + "\n";
+            message += "• " + formatEuroSmart(v) + "\n";
         });
         message += "\n";
     }
