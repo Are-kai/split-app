@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>50/50 Splitter</title>
 
-<!-- iOS Icon -->
 <link rel="apple-touch-icon" href="icon.png">
 
 <style>
@@ -73,24 +72,54 @@
         box-sizing: border-box;
     }
 
-    button {
+    /* Buttons sollen so breit sein wie die Spalten */
+    .button-row {
+        display: flex;
         width: 100%;
+        max-width: 900px;
+        margin: 20px auto 0;
+        gap: 10px;
+    }
+
+    button {
         padding: 14px;
-        background: #007aff;
         color: white;
         border: none;
         border-radius: 10px;
         font-size: 17px;
         font-weight: 600;
-        max-width: 400px;
-        display: block;
         height: 48px;
-        margin: 14px auto 0;
+        cursor: pointer;
+    }
+
+    .reload-btn {
+        background: #6c757d;
+        flex: 1; /* 33% */
     }
 
     .add-btn {
         background: #34c759;
-        margin-top: 20px;
+        flex: 2; /* 66% */
+    }
+
+    .calc-btn {
+        background: #007aff;
+        flex: 2; /* 66% */
+    }
+
+    .wa-btn {
+        background: #25D366;
+        flex: 1; /* 33% */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .wa-btn img {
+        width: 28px;
+        height: 28px;
+        filter: brightness(0) invert(1);
     }
 
     .result {
@@ -110,8 +139,6 @@
         <h2>Michelle</h2>
         <div class="inputs" id="michelleInputs">
             <input type="text" placeholder="...">
-            <input type="text" placeholder="...">
-            <input type="text" placeholder="...">
         </div>
     </div>
 
@@ -119,37 +146,42 @@
         <h2>Chris</h2>
         <div class="inputs" id="chrisInputs">
             <input type="text" placeholder="...">
-            <input type="text" placeholder="...">
-            <input type="text" placeholder="...">
         </div>
     </div>
 </div>
 
-<button class="add-btn" onclick="addRow()">+ Neue Zeile hinzufügen</button>
-<button onclick="calculate()">Berechnen</button>
+<!-- Buttonreihe 1 -->
+<div class="button-row">
+    <button class="reload-btn" onclick="reloadPage()">🔄 Neuladen</button>
+    <button class="add-btn" onclick="addRow()">+ Zeile</button>
+</div>
+
+<!-- Buttonreihe 2 -->
+<div class="button-row">
+    <button class="calc-btn" onclick="calculate()">Berechnen</button>
+    <button class="wa-btn" onclick="shareWhatsApp()">
+        <img src="whatsapp.png" alt="WhatsApp">
+    </button>
+</div>
 
 <div class="result" id="result"></div>
 
 <script>
-// Extrahiert den ersten gefundenen Zahlenwert aus einem String
+function reloadPage() {
+    location.reload();
+}
+
 function extractNumber(text) {
     if (!text) return 0;
-
     text = text.replace(",", ".");
-
     const match = text.match(/(\d+(\.\d+)?)/);
-
     return match ? parseFloat(match[0]) : 0;
 }
 
 function sumColumn(id) {
     const inputs = document.querySelectorAll(`#${id} input`);
     let sum = 0;
-
-    inputs.forEach(input => {
-        sum += extractNumber(input.value);
-    });
-
+    inputs.forEach(input => sum += extractNumber(input.value));
     return sum;
 }
 
@@ -187,6 +219,38 @@ function calculate() {
     }
 
     document.getElementById("result").innerText = text;
+}
+
+function shareWhatsApp() {
+    calculate();
+    const michelleInputs = Array.from(document.querySelectorAll("#michelleInputs input"))
+        .map(i => i.value.trim())
+        .filter(v => v !== "");
+
+    const chrisInputs = Array.from(document.querySelectorAll("#chrisInputs input"))
+        .map(i => i.value.trim())
+        .filter(v => v !== "");
+
+    const result = document.getElementById("result").innerText || "Noch kein Ergebnis berechnet.";
+
+    let message = "50/50 Splitter\n\n";
+
+    if (michelleInputs.length > 0) {
+        message += "Michelle Ausgaben:\n";
+        michelleInputs.forEach(v => message += "• " + v + "\n");
+        message += "\n";
+    }
+
+    if (chrisInputs.length > 0) {
+        message += "Chris Ausgaben:\n";
+        chrisInputs.forEach(v => message += "• " + v + "\n");
+        message += "\n";
+    }
+
+    message += "Ergebnis:\n" + result;
+
+    const url = "https://wa.me/?text=" + encodeURIComponent(message);
+    window.open(url, "_blank");
 }
 </script>
 
