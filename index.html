@@ -72,12 +72,11 @@
         box-sizing: border-box;
     }
 
-    /* Buttons sollen so breit sein wie die Spalten */
     .button-row {
         display: flex;
         width: 100%;
         max-width: 900px;
-        margin: 20px auto 0;
+        margin: 10px auto 0;
         gap: 10px;
     }
 
@@ -90,33 +89,35 @@
         font-weight: 600;
         height: 48px;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
     }
 
     .reload-btn {
         background: #6c757d;
-        flex: 1; /* 33% */
+        width: 50%;
     }
 
     .add-btn {
         background: #34c759;
-        flex: 2; /* 66% */
+        width: 50%;
     }
 
     .calc-btn {
         background: #007aff;
-        flex: 2; /* 66% */
+        width: 75%;
     }
 
     .wa-btn {
         background: #25D366;
-        flex: 1; /* 33% */
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        width: 25%;
         padding: 0;
     }
 
-    .wa-btn img {
+    /* ALLE Icons weiß färben */
+    button img {
         width: 28px;
         height: 28px;
         filter: brightness(0) invert(1);
@@ -152,13 +153,21 @@
 
 <!-- Buttonreihe 1 -->
 <div class="button-row">
-    <button class="reload-btn" onclick="reloadPage()">🔄 Neuladen</button>
-    <button class="add-btn" onclick="addRow()">+ Zeile</button>
+    <button class="reload-btn" onclick="reloadPage()">
+        <img src="reload.png" alt=""> Neu laden
+    </button>
+
+    <button class="add-btn" onclick="addRow()">
+        <img src="plus.png" alt=""> Neue Zeile
+    </button>
 </div>
 
 <!-- Buttonreihe 2 -->
 <div class="button-row">
-    <button class="calc-btn" onclick="calculate()">Berechnen</button>
+    <button class="calc-btn" onclick="calculate()">
+        <img src="calculate.png" alt=""> Ergebnis anzeigen
+    </button>
+
     <button class="wa-btn" onclick="shareWhatsApp()">
         <img src="whatsapp.png" alt="WhatsApp">
     </button>
@@ -222,7 +231,8 @@ function calculate() {
 }
 
 function shareWhatsApp() {
-    calculate();
+    calculate(); // Ergebnis immer aktualisieren
+
     const michelleInputs = Array.from(document.querySelectorAll("#michelleInputs input"))
         .map(i => i.value.trim())
         .filter(v => v !== "");
