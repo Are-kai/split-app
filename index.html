@@ -187,21 +187,39 @@ function extractNumber(text) {
 function formatEuroSmart(text) {
     if (!text) return text;
 
-    const match = text.match(/(\d+[.,]?\d*)\s*$/);
-    if (!match) return text;
+    // Zahl am Anfang?
+    let matchStart = text.match(/^(\d+[.,]?\d*)\s+(.*)$/);
+    if (matchStart) {
+        let number = matchStart[1].replace(",", ".");
+        let rest = matchStart[2];
+        let value = parseFloat(number);
 
-    let number = match[1].replace(",", ".");
-    let value = parseFloat(number);
-    if (isNaN(value)) return text;
+        if (!isNaN(value)) {
+            let formatted = Number.isInteger(value)
+                ? value.toString() + " €"
+                : value.toFixed(2).replace(".", ",") + " €";
 
-    let formatted;
-    if (Number.isInteger(value)) {
-        formatted = value.toString() + " €";
-    } else {
-        formatted = value.toFixed(2).replace(".", ",") + " €";
+            return rest + " " + formatted;
+        }
     }
 
-    return text.replace(/(\d+[.,]?\d*)\s*$/, formatted);
+    // Zahl am Ende?
+    let matchEnd = text.match(/^(.*\D)\s*(\d+[.,]?\d*)$/);
+    if (matchEnd) {
+        let rest = matchEnd[1].trim();
+        let number = matchEnd[2].replace(",", ".");
+        let value = parseFloat(number);
+
+        if (!isNaN(value)) {
+            let formatted = Number.isInteger(value)
+                ? value.toString() + " €"
+                : value.toFixed(2).replace(".", ",") + " €";
+
+            return rest + " " + formatted;
+        }
+    }
+
+    return text;
 }
 
 function sumColumn(id) {
