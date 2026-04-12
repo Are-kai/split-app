@@ -177,30 +177,33 @@ function reloadPage() {
     location.reload();
 }
 
+// Zahl aus einem Text extrahieren (Punkt oder Komma)
 function extractNumber(text) {
     if (!text) return 0;
-    text = text.replace(",", ".");
-    const match = text.match(/(\d+(\.\d+)?)/);
-    return match ? parseFloat(match[0]) : 0;
+    const match = text.match(/(\d+[.,]?\d*)/);
+    if (!match) return 0;
+    const normalized = match[1].replace(",", ".");
+    const value = parseFloat(normalized);
+    return isNaN(value) ? 0 : value;
 }
 
-/* Neue Funktion für reine Zahlen (Ergebnis) */
+// Nur für reine Zahlen im Ergebnis
 function formatEuroValue(value) {
-    let num = parseFloat(value);
-    if (isNaN(num)) return value;
+    const num = parseFloat(value);
+    if (isNaN(num)) return "";
 
     if (Number.isInteger(num)) {
-        return num.toString().replace(".", ",") + " €";
+        return num.toString() + " €";
     } else {
         return num.toFixed(2).replace(".", ",") + " €";
     }
 }
 
-/* Neue intelligente Text+Zahl-Formatierung */
+// Für Eingabetexte: Text + Zahl, Zahl vorne oder hinten
 function formatEuroSmart(text) {
     if (!text) return text;
 
-    // Zahl am Anfang?
+    // Zahl am Anfang: "179 Herd"
     let matchStart = text.match(/^(\d+[.,]?\d*)\s+(.*)$/);
     if (matchStart) {
         let number = matchStart[1].replace(",", ".");
@@ -216,7 +219,7 @@ function formatEuroSmart(text) {
         }
     }
 
-    // Zahl am Ende?
+    // Zahl am Ende: "Herd 179" oder "DM 50"
     let matchEnd = text.match(/^(.*\D)\s*(\d+[.,]?\d*)$/);
     if (matchEnd) {
         let rest = matchEnd[1].trim();
@@ -279,6 +282,7 @@ function calculate() {
 }
 
 function shareWhatsApp() {
+    // immer aktuelles Ergebnis
     calculate();
 
     const michelleInputs = Array.from(document.querySelectorAll("#michelleInputs input"))
